@@ -15,7 +15,7 @@ import '../styles/global.css';
 		<meta name="description" content="Liptaculous - Premium lip gloss launching soon" />
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
 	</head>
 	<body>
 		<!-- Floral Background Decorations -->
@@ -271,9 +271,9 @@ import '../styles/global.css';
 			}
 
 			.brand-name {
-				font-family: 'Playfair Display', serif;
-				font-size: clamp(3rem, 8vw, 5rem);
-				font-weight: 700;
+				font-family: 'Gochi Hand', cursive;
+				font-size: 140px;
+				font-weight: 400;
 				color: var(--cherry-blossom-300);
 				margin-bottom: 0.5rem;
 				letter-spacing: 2px;
@@ -425,6 +425,10 @@ import '../styles/global.css';
 			}
 
 			@media (max-width: 640px) {
+				.brand-name {
+					font-size: 80px;
+				}
+
 				.signup-form {
 					flex-direction: column;
 					align-items: stretch;
@@ -436,6 +440,12 @@ import '../styles/global.css';
 
 				.submit-btn {
 					width: 100%;
+				}
+			}
+
+			@media (max-width: 400px) {
+				.brand-name {
+					font-size: 60px;
 				}
 			}
 		</style>
