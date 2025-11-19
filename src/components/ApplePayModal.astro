@@ -43,12 +43,12 @@
         <div class="p-6 space-y-6">
             <!-- Product Summary -->
             <div class="flex gap-4 items-center">
-                <div
-                    class="w-16 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center text-2xl"
+                <img
+                    src=""
+                    alt="Product"
+                    class="w-16 h-16 bg-white rounded-lg shadow-sm object-cover"
                     id="checkout-image"
-                >
-                    💄
-                </div>
+                />
                 <div>
                     <h3 class="font-semibold text-gray-900" id="checkout-name">
                         Liptaculous Gloss
@@ -159,11 +159,13 @@
     function openModal(name: string, price: string, image: string) {
         const nameEl = document.getElementById("checkout-name");
         const priceEl = document.getElementById("checkout-price");
-        const imageEl = document.getElementById("checkout-image");
+        const imageEl = document.getElementById(
+            "checkout-image",
+        ) as HTMLImageElement;
 
         if (nameEl) nameEl.textContent = name;
         if (priceEl) priceEl.textContent = price;
-        if (imageEl && image) imageEl.textContent = image;
+        if (imageEl && image) imageEl.src = image;
 
         modal?.classList.remove("hidden");
         modal?.classList.add("flex");

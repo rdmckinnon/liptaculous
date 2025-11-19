@@ -16,9 +16,9 @@ const { name, price, image, color } = Astro.props;
 		class="aspect-[4/5] rounded-[1.5rem] overflow-hidden mb-5 bg-gradient-to-b from-white/50 to-champagne-pink-300/20 relative group-hover:shadow-inner transition-all duration-500"
 	>
 		<div
-			class="absolute inset-0 flex items-center justify-center text-7xl group-hover:scale-125 group-hover:rotate-12 transition-all duration-700 filter drop-shadow-lg"
+			class="absolute inset-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-700 filter drop-shadow-lg"
 		>
-			{image}
+			<img src={image} alt={name} class="w-full h-full object-cover" />
 		</div>
 		<div
 			class="absolute top-4 right-4 w-6 h-6 rounded-full border-2 border-white shadow-sm transform group-hover:scale-110 transition-transform"
