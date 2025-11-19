@@ -1,0 +1,234 @@
+---
+
+---
+
+<div
+    id="apple-pay-modal"
+    class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center"
+>
+    <!-- Backdrop -->
+    <div
+        class="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity opacity-0"
+        id="modal-backdrop"
+    >
+    </div>
+
+    <!-- Sheet -->
+    <div
+        class="relative w-full max-w-md bg-[#F2F2F7] rounded-t-[20px] sm:rounded-[20px] shadow-2xl transform translate-y-full transition-transform duration-300 ease-out overflow-hidden"
+        id="modal-sheet"
+    >
+        <!-- Header -->
+        <div
+            class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-white/80 backdrop-blur-xl sticky top-0 z-10"
+        >
+            <div class="flex items-center gap-2">
+                <div
+                    class="w-8 h-5 bg-black rounded flex items-center justify-center"
+                >
+                    <span
+                        class="text-white text-[10px] font-bold tracking-tighter"
+                        >Pay</span
+                    >
+                </div>
+            </div>
+            <button
+                id="cancel-btn"
+                class="text-blue-500 font-medium text-sm hover:text-blue-600"
+                >Cancel</button
+            >
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 space-y-6">
+            <!-- Product Summary -->
+            <div class="flex gap-4 items-center">
+                <div
+                    class="w-16 h-16 bg-white rounded-lg shadow-sm flex items-center justify-center text-2xl"
+                    id="checkout-image"
+                >
+                    💄
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-900" id="checkout-name">
+                        Liptaculous Gloss
+                    </h3>
+                    <p class="text-gray-500 text-sm">Total</p>
+                </div>
+                <div
+                    class="ml-auto font-semibold text-gray-900"
+                    id="checkout-price"
+                >
+                    $18.00
+                </div>
+            </div>
+
+            <!-- Card Info -->
+            <div class="bg-white rounded-xl p-4 shadow-sm space-y-3">
+                <div
+                    class="flex justify-between items-center border-b border-gray-100 pb-3"
+                >
+                    <span class="text-gray-500 text-sm">Card</span>
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-8 h-5 bg-gray-200 rounded flex items-center justify-center text-[8px] text-gray-600 font-bold"
+                        >
+                            VISA
+                        </div>
+                        <span class="text-gray-900 text-sm font-medium"
+                            >•••• 4242</span
+                        >
+                        <span class="text-blue-500 text-lg">›</span>
+                    </div>
+                </div>
+                <div
+                    class="flex justify-between items-center border-b border-gray-100 pb-3"
+                >
+                    <span class="text-gray-500 text-sm">Shipping</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-gray-900 text-sm font-medium"
+                            >Addy's House...</span
+                        >
+                        <span class="text-blue-500 text-lg">›</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="text-gray-500 text-sm">Contact</span>
+                    <div class="flex items-center gap-2">
+                        <span class="text-gray-900 text-sm font-medium"
+                            >addy@liptaculous.com</span
+                        >
+                        <span class="text-blue-500 text-lg">›</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pay Button -->
+            <div class="pt-4 pb-8">
+                <div class="text-center mb-4">
+                    <span
+                        class="text-gray-400 text-xs font-medium uppercase tracking-wide"
+                        >Double Click Side Button to Pay</span
+                    >
+                </div>
+                <!-- Face ID Animation Placeholder -->
+                <div
+                    class="h-16 flex items-center justify-center relative"
+                    id="face-id-area"
+                >
+                    <div
+                        class="w-12 h-12 rounded-full border-4 border-blue-500 opacity-0 scale-50 transition-all duration-500"
+                        id="processing-circle"
+                    >
+                    </div>
+                    <div
+                        class="absolute inset-0 flex items-center justify-center opacity-0 scale-50 transition-all duration-500 text-blue-500"
+                        id="success-check"
+                    >
+                        <svg
+                            class="w-16 h-16"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById("apple-pay-modal");
+    const backdrop = document.getElementById("modal-backdrop");
+    const sheet = document.getElementById("modal-sheet");
+    const cancelBtn = document.getElementById("cancel-btn");
+    const buyButtons = document.querySelectorAll(".buy-button");
+    const processingCircle = document.getElementById("processing-circle");
+    const successCheck = document.getElementById("success-check");
+    const faceIdArea = document.getElementById("face-id-area");
+
+    let isProcessing = false;
+
+    function openModal(name: string, price: string, image: string) {
+        const nameEl = document.getElementById("checkout-name");
+        const priceEl = document.getElementById("checkout-price");
+        const imageEl = document.getElementById("checkout-image");
+
+        if (nameEl) nameEl.textContent = name;
+        if (priceEl) priceEl.textContent = price;
+        if (imageEl && image) imageEl.textContent = image;
+
+        modal?.classList.remove("hidden");
+        modal?.classList.add("flex");
+        // Small delay for animation
+        setTimeout(() => {
+            backdrop?.classList.remove("opacity-0");
+            sheet?.classList.remove("translate-y-full");
+        }, 10);
+
+        // Simulate "Double Click" listener or just auto-start for demo
+        setTimeout(startPaymentFlow, 1500);
+    }
+
+    function closeModal() {
+        if (isProcessing) return;
+        backdrop?.classList.add("opacity-0");
+        sheet?.classList.add("translate-y-full");
+        setTimeout(() => {
+            modal?.classList.add("hidden");
+            modal?.classList.remove("flex");
+            resetPaymentFlow();
+        }, 300);
+    }
+
+    function startPaymentFlow() {
+        isProcessing = true;
+        processingCircle?.classList.remove("opacity-0", "scale-50");
+        processingCircle?.classList.add("animate-spin");
+
+        // Simulate processing time
+        setTimeout(() => {
+            processingCircle?.classList.add("opacity-0", "scale-50");
+            processingCircle?.classList.remove("animate-spin");
+
+            successCheck?.classList.remove("opacity-0", "scale-50");
+            successCheck?.classList.add("scale-100");
+
+            // Haptic feedback if available (mobile)
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate([50, 50, 50]);
+            }
+
+            setTimeout(() => {
+                closeModal();
+                isProcessing = false;
+                // Show confetti or success toast on main page?
+            }, 2000);
+        }, 2000);
+    }
+
+    function resetPaymentFlow() {
+        successCheck?.classList.add("opacity-0", "scale-50");
+        successCheck?.classList.remove("scale-100");
+    }
+
+    buyButtons.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            const target = e.currentTarget as HTMLElement;
+            const name = target.dataset.name;
+            const price = target.dataset.price;
+            const image = target.dataset.image;
+            openModal(name, price, image);
+        });
+    });
+
+    cancelBtn?.addEventListener("click", closeModal);
+    backdrop?.addEventListener("click", closeModal);
+</script>

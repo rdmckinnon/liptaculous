@@ -1,0 +1,79 @@
+---
+
+---
+
+<nav
+    class="fixed top-0 left-0 right-0 z-40 bg-white/70 backdrop-blur-md border-b border-white/50 transition-all duration-300"
+    id="navbar"
+>
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <!-- Logo -->
+        <a
+            href="/"
+            class="font-gochi text-3xl text-cherry-blossom-500 hover:scale-105 transition-transform"
+        >
+            Liptaculous
+        </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center gap-8">
+            <a
+                href="#shop"
+                class="font-poppins text-mountbatten-400 hover:text-cherry-blossom-500 transition-colors font-medium"
+                >Shop</a
+            >
+            <a
+                href="#about"
+                class="font-poppins text-mountbatten-400 hover:text-cherry-blossom-500 transition-colors font-medium"
+                >About</a
+            >
+            <a
+                href="#reviews"
+                class="font-poppins text-mountbatten-400 hover:text-cherry-blossom-500 transition-colors font-medium"
+                >Reviews</a
+            >
+        </div>
+
+        <!-- Cart / Actions -->
+        <div class="flex items-center gap-4">
+            <button
+                class="relative p-2 text-mountbatten-400 hover:text-cherry-blossom-500 transition-colors group"
+            >
+                <span class="sr-only">Cart</span>
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                </svg>
+                <span
+                    class="absolute top-0 right-0 bg-cherry-blossom-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center transform scale-0 group-hover:scale-100 transition-transform"
+                    id="cart-count">0</span
+                >
+            </button>
+        </div>
+    </div>
+</nav>
+
+<script>
+    // Simple scroll effect for navbar
+    const navbar = document.getElementById("navbar");
+    if (navbar) {
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 20) {
+                navbar.classList.add("shadow-sm", "bg-white/90");
+                navbar.classList.remove("bg-white/70");
+            } else {
+                navbar.classList.remove("shadow-sm", "bg-white/90");
+                navbar.classList.add("bg-white/70");
+            }
+        });
+    }
+</script>
