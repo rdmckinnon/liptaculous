@@ -3,6 +3,7 @@ import "../styles/global.css";
 import ProductCard from "../components/ProductCard.astro";
 import ApplePayModal from "../components/ApplePayModal.astro";
 import Navbar from "../components/Navbar.astro";
+import CartDrawer from "../components/CartDrawer.astro";
 import { products } from "../data/products";
 ---
 
@@ -11,13 +12,18 @@ import { products } from "../data/products";
 	<head>
 		<meta charset="utf-8" />
 		<!-- Google tag (gtag.js) -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z4YDRLDB8R"></script>
+		<script
+			async
+			src="https://www.googletagmanager.com/gtag/js?id=G-Z4YDRLDB8R"
+		></script>
 		<script is:inline>
 			window.dataLayer = window.dataLayer || [];
-			function gtag(){dataLayer.push(arguments);}
-			gtag('js', new Date());
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+			gtag("js", new Date());
 
-			gtag('config', 'G-Z4YDRLDB8R');
+			gtag("config", "G-Z4YDRLDB8R");
 		</script>
 		<link rel="icon" type="image/png" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width" />
@@ -292,6 +298,7 @@ import { products } from "../data/products";
 			</footer>
 		</main>
 
+		<CartDrawer />
 		<ApplePayModal />
 	</body>
 </html>

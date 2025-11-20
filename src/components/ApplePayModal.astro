@@ -149,14 +149,29 @@
     const backdrop = document.getElementById("modal-backdrop");
     const sheet = document.getElementById("modal-sheet");
     const cancelBtn = document.getElementById("cancel-btn");
-    const buyButtons = document.querySelectorAll(".buy-button");
     const processingCircle = document.getElementById("processing-circle");
     const successCheck = document.getElementById("success-check");
     const faceIdArea = document.getElementById("face-id-area");
 
     let isProcessing = false;
 
-    function openModal(name: string, price: string, image: string) {
+    // Listen for Cart Checkout
+    document.addEventListener("open-apple-pay", (e: any) => {
+        const { total, count } = e.detail;
+        openModal(
+            "Liptaculous Cart",
+            `$${total.toFixed(2)}`,
+            "/favicon.png",
+            true,
+        );
+    });
+
+    function openModal(
+        name: string,
+        price: string,
+        image: string,
+        isCart = false,
+    ) {
         const nameEl = document.getElementById("checkout-name");
         const priceEl = document.getElementById("checkout-price");
         const imageEl = document.getElementById(
@@ -165,7 +180,14 @@
 
         if (nameEl) nameEl.textContent = name;
         if (priceEl) priceEl.textContent = price;
-        if (imageEl && image) imageEl.src = image;
+        if (imageEl) {
+            imageEl.src = image;
+            if (isCart) {
+                imageEl.classList.add("p-2"); // Add padding for favicon/logo
+            } else {
+                imageEl.classList.remove("p-2");
+            }
+        }
 
         modal?.classList.remove("hidden");
         modal?.classList.add("flex");
@@ -211,7 +233,10 @@
             setTimeout(() => {
                 closeModal();
                 isProcessing = false;
-                // Show confetti or success toast on main page?
+                // Clear cart on success
+                localStorage.removeItem("liptaculous-cart");
+                // Reload to reset state (simple way)
+                window.location.reload();
             }, 2000);
         }, 2000);
     }
@@ -220,16 +245,6 @@
         successCheck?.classList.add("opacity-0", "scale-50");
         successCheck?.classList.remove("scale-100");
     }
-
-    buyButtons.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-            const target = e.currentTarget as HTMLElement;
-            const name = target.dataset.name;
-            const price = target.dataset.price;
-            const image = target.dataset.image;
-            openModal(name, price, image);
-        });
-    });
 
     cancelBtn?.addEventListener("click", closeModal);
     backdrop?.addEventListener("click", closeModal);

@@ -58,5 +58,35 @@ export const products = [
         description: "A soft peach shade for a natural, sun-kissed glow. Summer vibes all year round.",
         scent: "Fresh Peach",
         ingredients: ["Peach Kernel Oil", "Mango Butter", "Sunshine"]
+    },
+    {
+        id: "sugar-cookie",
+        name: "Sugar Cookie",
+        price: "$18.00",
+        image: "/images/sugar-cookie.png",
+        color: "#F5DEB3",
+        description: "Warm, buttery, and sweet. Smells like fresh baked cookies straight from the oven.",
+        scent: "Warm Vanilla Sugar",
+        ingredients: ["Cocoa Butter", "Brown Sugar", "Love"]
+    },
+    {
+        id: "cotton-candy",
+        name: "Cotton Candy",
+        price: "$18.00",
+        image: "/images/cotton-candy.png",
+        color: "#FFB7D5",
+        description: "Fluffy pink sweetness. A carnival for your lips that tastes like pure joy.",
+        scent: "Spun Sugar",
+        ingredients: ["Sweet Almond Oil", "Pink Clouds", "Magic"]
+    },
+    {
+        id: "choco-kiss",
+        name: "Choco Kiss",
+        price: "$20.00",
+        image: "/images/choco-kiss.png",
+        color: "#D2691E",
+        description: "Rich chocolate glaze. Decadent, delicious, and zero calories!",
+        scent: "Milk Chocolate",
+        ingredients: ["Cocoa Extract", "Shea Butter", "Hazelnut Oil"]
     }
 ];

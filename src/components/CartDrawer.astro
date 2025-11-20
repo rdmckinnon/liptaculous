@@ -1,0 +1,245 @@
+---
+
+---
+
+<div
+    id="cart-drawer"
+    class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col"
+>
+    <!-- Header -->
+    <div
+        class="p-6 border-b border-gray-100 flex justify-between items-center bg-white/80 backdrop-blur-xl sticky top-0 z-10"
+    >
+        <h2 class="font-playfair text-2xl text-mountbatten-400">Your Bag 🛍️</h2>
+        <button
+            id="close-cart"
+            class="text-mountbatten-300 hover:text-cherry-blossom-500 transition-colors"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+            >
+                <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+
+    <!-- Cart Items -->
+    <div class="flex-1 overflow-y-auto p-6 space-y-6" id="cart-items-container">
+        <!-- Empty State (Default) -->
+        <div class="text-center py-12" id="empty-cart-message">
+            <div class="text-6xl mb-4">👛</div>
+            <p class="font-quicksand text-mountbatten-300 text-lg">
+                Your bag is empty!
+            </p>
+            <button
+                onclick="document.getElementById('cart-drawer').classList.add('translate-x-full')"
+                class="mt-4 text-cherry-blossom-500 font-bold hover:underline"
+            >
+                Start Shopping
+            </button>
+        </div>
+        <!-- Items will be injected here via JS -->
+    </div>
+
+    <!-- Footer / Checkout -->
+    <div class="p-6 border-t border-gray-100 bg-gray-50">
+        <div class="flex justify-between items-center mb-4">
+            <span class="font-quicksand text-mountbatten-300">Subtotal</span>
+            <span
+                class="font-poppins font-bold text-mountbatten-400 text-xl"
+                id="cart-total">$0.00</span
+            >
+        </div>
+        <button
+            id="checkout-btn"
+            class="w-full py-4 rounded-xl bg-mountbatten-400 text-white font-poppins font-bold uppercase tracking-widest hover:bg-cherry-blossom-500 transition-all duration-300 shadow-lg shadow-mountbatten-400/20 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled
+        >
+            Checkout with Apple Pay
+        </button>
+    </div>
+</div>
+
+<!-- Backdrop -->
+<div
+    id="cart-backdrop"
+    class="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 hidden transition-opacity opacity-0"
+>
+</div>
+
+<script>
+    // Cart State
+    interface CartItem {
+        name: string;
+        price: string;
+        image: string;
+    }
+
+    let cart: CartItem[] = [];
+
+    // DOM Elements
+    const drawer = document.getElementById("cart-drawer");
+    const backdrop = document.getElementById("cart-backdrop");
+    const closeBtn = document.getElementById("close-cart");
+    const itemsContainer = document.getElementById("cart-items-container");
+    const emptyMessage = document.getElementById("empty-cart-message");
+    const totalEl = document.getElementById("cart-total");
+    const checkoutBtn = document.getElementById("checkout-btn");
+    const cartCountBadges = document.querySelectorAll("#cart-count"); // In Navbar
+
+    // Load cart from local storage
+    const savedCart = localStorage.getItem("liptaculous-cart");
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
+        updateCartUI();
+    }
+
+    // Event Listeners
+    document.addEventListener("toggle-cart", () => {
+        toggleCart();
+    });
+
+    document.addEventListener("add-to-cart", (e: Event) => {
+        const customEvent = e as CustomEvent;
+        const product = customEvent.detail;
+        addToCart(product);
+        openCart();
+    });
+
+    closeBtn?.addEventListener("click", closeCart);
+    backdrop?.addEventListener("click", closeCart);
+
+    checkoutBtn?.addEventListener("click", () => {
+        // Trigger Apple Pay Modal with total
+        const total = calculateTotal();
+        const event = new CustomEvent("open-apple-pay", {
+            detail: {
+                total: total,
+                count: cart.length,
+            },
+        });
+        document.dispatchEvent(event);
+        closeCart();
+    });
+
+    // Functions
+    function toggleCart() {
+        if (drawer?.classList.contains("translate-x-full")) {
+            openCart();
+        } else {
+            closeCart();
+        }
+    }
+
+    function openCart() {
+        drawer?.classList.remove("translate-x-full");
+        backdrop?.classList.remove("hidden");
+        // Small delay for opacity transition
+        setTimeout(() => {
+            backdrop?.classList.remove("opacity-0");
+        }, 10);
+    }
+
+    function closeCart() {
+        drawer?.classList.add("translate-x-full");
+        backdrop?.classList.add("opacity-0");
+        setTimeout(() => {
+            backdrop?.classList.add("hidden");
+        }, 300);
+    }
+
+    function addToCart(product: CartItem) {
+        cart.push(product);
+        saveCart();
+        updateCartUI();
+    }
+
+    function removeFromCart(index: number) {
+        cart.splice(index, 1);
+        saveCart();
+        updateCartUI();
+    }
+
+    function saveCart() {
+        localStorage.setItem("liptaculous-cart", JSON.stringify(cart));
+    }
+
+    function calculateTotal() {
+        return cart.reduce((sum, item) => {
+            const price = parseFloat(item.price.replace("$", ""));
+            return sum + price;
+        }, 0);
+    }
+
+    function updateCartUI() {
+        // Update Badge
+        cartCountBadges.forEach((badge) => {
+            badge.textContent = cart.length.toString();
+            badge.classList.toggle("scale-0", cart.length === 0);
+        });
+
+        // Update Total
+        const total = calculateTotal();
+        if (totalEl) totalEl.textContent = `$${total.toFixed(2)}`;
+
+        // Enable/Disable Checkout
+        if (checkoutBtn) {
+            (checkoutBtn as HTMLButtonElement).disabled = cart.length === 0;
+        }
+
+        // Render Items
+        if (!itemsContainer || !emptyMessage) return;
+
+        if (cart.length === 0) {
+            emptyMessage.style.display = "block";
+            // Remove other items
+            Array.from(itemsContainer.children).forEach((child) => {
+                if (child.id !== "empty-cart-message") child.remove();
+            });
+        } else {
+            emptyMessage.style.display = "none";
+
+            // Clear current list (except empty message)
+            Array.from(itemsContainer.children).forEach((child) => {
+                if (child.id !== "empty-cart-message") child.remove();
+            });
+
+            // Re-render
+            cart.forEach((item, index) => {
+                const itemEl = document.createElement("div");
+                itemEl.className =
+                    "flex gap-4 items-center bg-gray-50 p-3 rounded-xl animate-fade-in";
+                itemEl.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-lg object-cover bg-white border border-gray-100">
+                    <div class="flex-1">
+                        <h4 class="font-poppins font-semibold text-mountbatten-400 text-sm">${item.name}</h4>
+                        <p class="font-quicksand text-mountbatten-300 text-xs">${item.price}</p>
+                    </div>
+                    <button class="remove-btn text-gray-400 hover:text-red-400 transition-colors p-2" data-index="${index}">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                `;
+                itemsContainer.appendChild(itemEl);
+            });
+
+            // Add event listeners to new remove buttons
+            document.querySelectorAll(".remove-btn").forEach((btn) => {
+                btn.addEventListener("click", (e) => {
+                    const target = e.currentTarget as HTMLElement;
+                    const index = parseInt(target.dataset.index || "0");
+                    removeFromCart(index);
+                });
+            });
+        }
+    }
+</script>

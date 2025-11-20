@@ -48,7 +48,7 @@ const { name, price, image, color } = Astro.props;
 		</div>
 
 		<button
-			class="mt-auto w-full py-3 rounded-xl bg-mountbatten-400 text-white font-poppins font-medium text-sm uppercase tracking-widest hover:bg-cherry-blossom-500 hover:shadow-lg hover:shadow-cherry-blossom-500/30 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 buy-button group-hover:animate-pulse-once"
+			class="mt-auto w-full py-3 rounded-xl bg-mountbatten-400 text-white font-poppins font-medium text-sm uppercase tracking-widest hover:bg-cherry-blossom-500 hover:shadow-lg hover:shadow-cherry-blossom-500/30 transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 add-to-cart-btn group-hover:animate-pulse-once"
 			data-name={name}
 			data-price={price}
 			data-image={image}
@@ -57,3 +57,24 @@ const { name, price, image, color } = Astro.props;
 		</button>
 	</div>
 </div>
+
+<script>
+	const buttons = document.querySelectorAll(".add-to-cart-btn");
+	buttons.forEach((btn) => {
+		btn.addEventListener("click", (e) => {
+			const target = e.currentTarget as HTMLElement;
+			const product = {
+				name: target.dataset.name,
+				price: target.dataset.price,
+				image: target.dataset.image,
+			};
+
+			// Dispatch event for CartDrawer
+			document.dispatchEvent(
+				new CustomEvent("add-to-cart", {
+					detail: product,
+				}),
+			);
+		});
+	});
+</script>

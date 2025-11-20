@@ -37,6 +37,7 @@
         <!-- Cart / Actions -->
         <div class="flex items-center gap-4">
             <button
+                id="cart-toggle-btn"
                 class="relative p-2 text-mountbatten-400 hover:text-cherry-blossom-500 transition-colors group"
             >
                 <span class="sr-only">Cart</span>
@@ -76,4 +77,10 @@
             }
         });
     }
+
+    // Cart Toggle
+    const cartBtn = document.getElementById("cart-toggle-btn");
+    cartBtn?.addEventListener("click", () => {
+        document.dispatchEvent(new CustomEvent("toggle-cart"));
+    });
 </script>
